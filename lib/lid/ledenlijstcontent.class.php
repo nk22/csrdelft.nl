@@ -6,10 +6,9 @@ use CsrDelft\model\entity\LidStatus;
 use CsrDelft\model\entity\Profiel;
 use CsrDelft\model\ProfielModel;
 use CsrDelft\model\security\LoginModel;
+use CsrDelft\model\zoeken\LidZoeker;
 use CsrDelft\view\View;
 use function CsrDelft\getMelding;
-
-require_once 'lid/LidZoeker.php';
 
 abstract class LLWeergave {
 

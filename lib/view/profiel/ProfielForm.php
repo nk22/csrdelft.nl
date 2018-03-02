@@ -2,8 +2,7 @@
 
 namespace CsrDelft\view\profiel;
 
-use CsrDelft\lid\LidZoeker;
-use CsrDelft\model\entity\Afbeelding;
+use CsrDelft\model\zoeken\LidZoeker;
 use CsrDelft\model\entity\LidStatus;
 use CsrDelft\model\entity\OntvangtContactueel;
 use CsrDelft\model\entity\Profiel;
@@ -17,8 +16,6 @@ use CsrDelft\view\formulier\getalvelden\IntField;
 use CsrDelft\view\formulier\getalvelden\RequiredIntField;
 use CsrDelft\view\formulier\getalvelden\RequiredTelefoonField;
 use CsrDelft\view\formulier\getalvelden\TelefoonField;
-use CsrDelft\view\formulier\invoervelden\DuckField;
-use CsrDelft\view\formulier\invoervelden\EmailField;
 use CsrDelft\view\formulier\invoervelden\LandField;
 use CsrDelft\view\formulier\invoervelden\LidField;
 use CsrDelft\view\formulier\invoervelden\RequiredEmailField;
@@ -38,8 +35,10 @@ use CsrDelft\view\formulier\keuzevelden\RequiredSelectField;
 use CsrDelft\view\formulier\keuzevelden\SelectField;
 use CsrDelft\view\formulier\keuzevelden\VerticaleField;
 use CsrDelft\view\formulier\knoppen\FormDefaultKnoppen;
-use CsrDelft\view\formulier\uploadvelden\ImageField;
 
+/**
+ * @property Profiel $model
+ */
 class ProfielForm extends Formulier {
 
 	public function getBreadcrumbs() {
@@ -88,12 +87,12 @@ class ProfielForm extends Formulier {
 			if ($profiel->voornaam == '') {
 				$gelijknamigenovieten = array();
 			} else {
-				$gelijknamigenovieten = LidZoeker::zoekLeden($profiel->voornaam, 'voornaam', 'alle', 'achternaam', array(LidStatus::Noviet), array('uid'));
+				$gelijknamigenovieten = LidZoeker::zoekLeden_deprecated($profiel->voornaam, 'voornaam', 'alle', 'achternaam', array(LidStatus::Noviet), array('uid'));
 			}
 			if ($profiel->achternaam == '') {
 				$gelijknamigeleden = array();
 			} else {
-				$gelijknamigeleden = LidZoeker::zoekLeden($profiel->achternaam, 'achternaam', 'alle', 'lidjaar', array(LidStatus::Lid, LidStatus::Gastlid), array('uid'));
+				$gelijknamigeleden = LidZoeker::zoekLeden_deprecated($profiel->achternaam, 'achternaam', 'alle', 'lidjaar', array(LidStatus::Lid, LidStatus::Gastlid), array('uid'));
 			}
 
 			$html = '<div class="novieten">';

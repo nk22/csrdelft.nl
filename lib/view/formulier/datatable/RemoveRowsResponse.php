@@ -10,9 +10,9 @@ namespace CsrDelft\view\formulier\datatable;
 
 class RemoveRowsResponse extends DataTableResponse {
 
-	public function getJson($entity) {
+	public function getJson($profiel) {
 		return parent::getJson(array(
-			'UUID' => $entity->getUUID(),
+			'UUID' => $profiel->getUUID(),
 			'remove' => true
 		));
 	}

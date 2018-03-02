@@ -3,6 +3,7 @@
 namespace CsrDelft\view\formulier\datatable;
 
 use function CsrDelft\classNameZonderNamespace;
+use CsrDelft\Orm\PersistenceModel;
 use CsrDelft\view\formulier\elementen\FormElement;
 use CsrDelft\view\View;
 
@@ -14,6 +15,8 @@ use CsrDelft\view\View;
  *
  * Uses DataTables plug-in for jQuery.
  * @see http://www.datatables.net/
+ *
+ * @property PersistenceModel $model
  *
  */
 class DataTable implements View, FormElement {
@@ -64,7 +67,8 @@ class DataTable implements View, FormElement {
 			),
 			'buttons' => array(
 				'copy' => 'Kopiëren',
-				'print' => 'Printen'
+				'print' => 'Printen',
+				'colvis' => 'Kolom weergave',
 			),
 			// Eigen definities
 			'csr' => array(
@@ -93,14 +97,28 @@ class DataTable implements View, FormElement {
 		);
 
 		// generate columns from entity attributes
-		foreach ($this->model->getAttributes() as $attribute) {
+		foreach ($this->getColumnNames() as $attribute) {
 			$this->addColumn($attribute);
 		}
 
 		// hide primary key columns
-		foreach ($this->model->getPrimaryKey() as $attribute) {
+		foreach ($this->getHiddenColumnNames() as $attribute) {
 			$this->hideColumn($attribute);
 		}
+	}
+
+	/**
+	 * @return string[]
+	 */
+	protected function getColumnNames() {
+		return $this->model->getAttributes();
+	}
+
+	/**
+	 * @return string[]
+	 */
+	protected function getHiddenColumnNames() {
+		return $this->model->getPrimaryKey();
 	}
 
 	/**
@@ -126,7 +144,7 @@ class DataTable implements View, FormElement {
 		$this->settings['order'] = $orders;
 	}
 
-	protected function addColumn($newName, $before = null, $defaultContent = null, $render = null, $order_by = null, $type = 'string') {
+	protected function addColumn($newName, $before = null, $defaultContent = null, $render = null, $order_by = null, $type = 'string', $orderable = true) {
 		// column definition
 		$newColumn = array(
 			'name' => $newName,
@@ -135,6 +153,7 @@ class DataTable implements View, FormElement {
 			'defaultContent' => $defaultContent,
 			'type' => $type,
 			'searchable' => false,
+			'orderable' => $orderable,
 			'render' => $render
 			/*
 			  //TODO: sort by other column
@@ -143,7 +162,11 @@ class DataTable implements View, FormElement {
 			 */
 		);
 		if ($order_by !== null) {
-			$newColumn['orderData'] = $this->columnPosition($order_by);
+			if (is_array($order_by)) {
+				$newColumn['orderData'] = array_map('\CsrDelft\view\formulier\datatable\DataTable::columnPosition', $order_by);
+			} else {
+				$newColumn['orderData'] = $this->columnPosition($order_by);
+			}
 		}
 		// append or insert at position
 		if ($before === null) {

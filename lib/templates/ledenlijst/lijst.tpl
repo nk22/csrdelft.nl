@@ -1,0 +1,1 @@
+{$ledenlijstTable->view()}

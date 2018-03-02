@@ -9,7 +9,7 @@ RewriteRule ^owee/?$			/csrindeowee [L]
 RewriteRule ^facebook			https://www.facebook.com/delftcsr [R,L]
 RewriteRule ^feuten				https://trac.knorrie.org/csrdelft.nl/report/1 [R,L]
 
-RewriteRule ^(leden)?lijst/?(.*)$	tools/lijst.php [QSA,L]
+#RewriteRule ^(leden)?lijst/?(.*)$	tools/lijst.php [QSA,L]
 
 RewriteRule ^forum/rss/([0-9a-zA-Z]*)/csrdelft.xml		index.php?c=Forum&private_token=$1 [L]
 RewriteRule ^agenda/ical/([0-9a-zA-Z]*)/csrdelft.ics	index.php?c=Agenda&private_token=$1 [L]
@@ -23,6 +23,7 @@ RewriteRule ^verify				index.php?c=Login [L]
 RewriteRule ^wachtwoord			index.php?c=Login [L]
 RewriteRule ^account			index.php?c=Login [L]
 
+RewriteRule ^ledenlijst			index.php?c=Ledenlijst [QSA,L]
 RewriteRule ^eetplan			index.php?c=Eetplan		[QSA,L]
 RewriteRule ^documenten			index.php?c=Documenten	[QSA,L]
 RewriteRule ^bibliotheek		index.php?c=Bibliotheek [QSA,L]

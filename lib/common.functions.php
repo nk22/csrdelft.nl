@@ -6,7 +6,7 @@ namespace CsrDelft;
 # -------------------------------------------------------------------
 # common.functions.php
 # -------------------------------------------------------------------
-use CsrDelft\lid\LidZoeker;
+use CsrDelft\model\zoeken\LidZoeker;
 use CsrDelft\model\InstellingenModel;
 use CsrDelft\model\ProfielModel;
 use CsrDelft\model\security\LoginModel;
@@ -410,8 +410,7 @@ function namen2uid($sNamen, $filter = 'leden') {
 	$aNamen = explode(',', $sNamen);
 	foreach ($aNamen as $sNaam) {
 		$aNaamOpties = array();
-		require_once 'lid/LidZoeker.php';
-		$aZoekNamen = LidZoeker::zoekLeden($sNaam, 'naam', 'alle', 'achternaam', $filter, array('uid', 'voornaam', 'tussenvoegsel', 'achternaam'));
+		$aZoekNamen = LidZoeker::zoekLeden_deprecated($sNaam, 'naam', 'alle', 'achternaam', $filter, array('uid', 'voornaam', 'tussenvoegsel', 'achternaam'));
 		if (count($aZoekNamen) == 1) {
 			$naam = $aZoekNamen[0]['voornaam'] . ' ';
 			if (trim($aZoekNamen[0]['tussenvoegsel']) != '') {

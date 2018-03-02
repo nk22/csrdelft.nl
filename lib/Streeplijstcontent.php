@@ -2,7 +2,7 @@
 
 namespace CsrDelft;
 
-use CsrDelft\lid\LidZoeker;
+use CsrDelft\model\zoeken\LidZoeker;
 use CsrDelft\model\groepen\VerticalenModel;
 use CsrDelft\model\ProfielModel;
 use CsrDelft\view\View;
@@ -51,8 +51,7 @@ class Streeplijstcontent implements View {
 			$this->sLidjaar = $_GET['lichting'];
 		}
 		//leden welke in de lijst moeten laden.
-		require_once 'lid/LidZoeker.php';
-		$this->aLeden = LidZoeker::zoekLeden($this->sLidjaar, 'uid', $this->sVerticale, 'achternaam', 'leden');
+		$this->aLeden = LidZoeker::zoekLeden_deprecated($this->sLidjaar, 'uid', $this->sVerticale, 'achternaam', 'leden');
 	}
 
 	function parseGoederen($sGoederen) {

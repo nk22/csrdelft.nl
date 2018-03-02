@@ -1,12 +1,13 @@
 <?php
 
-namespace CsrDelft\lid;
+namespace CsrDelft\model\zoeken;
 
 use CsrDelft\MijnSqli;
 use CsrDelft\model\entity\Profiel;
 use CsrDelft\model\groepen\VerticalenModel;
 use CsrDelft\model\ProfielModel;
 use CsrDelft\model\security\LoginModel;
+use CsrDelft\Orm\PersistenceModel;
 
 require_once 'common.functions.php';
 
@@ -15,14 +16,88 @@ require_once 'common.functions.php';
  *
  * de array's die in deze class staan bepalen wat er in het formulier te zien is.
  *
- * @deprecated
  */
-class LidZoeker {
+class LidZoeker extends Zoeker {
+
+	public function zoekLeden($zoekTerm, $zoekVeld, $verticale, $orderBy, $status, $velden) {
+
+	}
+
+	protected $zoekMethoden = [
+		"\CsrDelft\model\zoeken\LidZoeker::methodeLidNaam",
+		"\CsrDelft\model\zoeken\LidZoeker::methodeLidAdres",
+		"\CsrDelft\model\zoeken\LidZoeker::methodeLidLichting",
+	];
+
+	/**
+	 * @param $fields
+	 * @param $term
+	 * @return string
+	 */
+	protected function methodeLidNaam($fields, $term) {
+		if (in_array('naam', $fields) AND !preg_match('/^\d{2}$/', $term)) {
+			if (preg_match('/ /', trim($term))) {
+				$zoekdelen = explode(' ', $term);
+				$iZoekdelen = count($zoekdelen);
+				if ($iZoekdelen == 2) {
+					return "( voornaam LIKE '%" . $zoekdelen[0] . "%' AND achternaam LIKE '%" . $zoekdelen[1] . "%' )
+					 OR ( voornaam LIKE '%{$term}%' OR achternaam LIKE '%{$term}%' OR nickname LIKE '%{$term}%' OR uid LIKE '%{$term}%' )";
+				} else {
+					return "( voornaam LIKE '%" . $zoekdelen[0] . "%' AND achternaam LIKE '%" . $zoekdelen[$iZoekdelen - 1] . "%' )";
+				}
+			} else {
+				return "
+					voornaam LIKE '%{$term}%' OR achternaam LIKE '%{$term}%' OR
+					nickname LIKE '%{$term}%' OR uid LIKE '%{$term}%'";
+			}
+		} else {
+			return '';
+		}
+	}
+
+	/**
+	 * @param $fields
+	 * @param $term
+	 * @return string
+	 */
+	protected function methodeLidAdres($fields, $term) {
+		if (in_array('adres', $fields)) {
+			return "adres LIKE '%{$term}%' OR woonplaats LIKE '%{$term}%' OR
+				postcode LIKE '%{$term}%' OR REPLACE(postcode, ' ', '') LIKE '%" . str_replace(' ', '', $term) . "%'";
+		}
+
+		return '';
+	}
+
+	/**
+	 * @param $fields
+	 * @param $term
+	 * @return string
+	 */
+	protected function methodeLidLichting($fields, $term) {
+		if (preg_match('/^\d{2}$/', $term) AND (in_array('uid', $fields) OR in_array('naam', $fields))) {
+			//zoeken op lichtingen...
+			return "SUBSTRING(uid, 1, 2)='" . $term . "'";
+		}
+
+		return '';
+	}
+
+	protected function methodeLidStatus($fields, $term) {
+		# we zoeken in leden als
+		# 1. ingelogde persoon dat alleen maar mag of
+		# 2. ingelogde persoon leden en oudleden mag zoeken, maar niet oudleden alleen heeft gekozen
+		if (
+			(LoginModel::mag('P_LEDEN_READ') and !LoginModel::mag('P_OUDLEDEN_READ')) or (LoginModel::mag('P_LEDEN_READ') and LoginModel::mag('P_OUDLEDEN_READ') and $zoekstatus != 'oudleden')
+		) {
+			return "status='S_LID' OR status='S_GASTLID' OR status='S_NOVIET' OR status='S_KRINGEL'";
+		}
+	}
 
 	/**
 	 * @deprecated Dit is de oude zoekfunctie, maar deze functie wordt nog veelvuldig gebruikt...
 	 */
-	public static function zoekLeden($zoekterm, $zoekveld, $verticale, $sort, $zoekstatus = '', $velden = array(), $limiet = 0) {
+	public static function zoekLeden_deprecated($zoekterm, $zoekveld, $verticale, $sort, $zoekstatus = '', $velden = array(), $limiet = 0) {
 		$db = MijnSqli::instance();
 		$leden = array();
 		$zoekfilter = '';
@@ -35,34 +110,6 @@ class LidZoeker {
 		  $veld = trim, escape, lalala
 		  } */
 
-		//Zoeken standaard in voornaam, achternaam, bijnaam en uid.
-		if ($zoekveld == 'naam' AND !preg_match('/^\d{2}$/', $zoekterm)) {
-			if (preg_match('/ /', trim($zoekterm))) {
-				$zoekdelen = explode(' ', $zoekterm);
-				$iZoekdelen = count($zoekdelen);
-				if ($iZoekdelen == 2) {
-					$zoekfilter = "( voornaam LIKE '%" . $zoekdelen[0] . "%' AND achternaam LIKE '%" . $zoekdelen[1] . "%' ) OR";
-					$zoekfilter .= "( voornaam LIKE '%{$zoekterm}%' OR achternaam LIKE '%{$zoekterm}%' OR
-                                    nickname LIKE '%{$zoekterm}%' OR uid LIKE '%{$zoekterm}%' )";
-				} else {
-					$zoekfilter = "( voornaam LIKE '%" . $zoekdelen[0] . "%' AND achternaam LIKE '%" . $zoekdelen[$iZoekdelen - 1] . "%' )";
-				}
-			} else {
-				$zoekfilter = "
-					voornaam LIKE '%{$zoekterm}%' OR achternaam LIKE '%{$zoekterm}%' OR
-					nickname LIKE '%{$zoekterm}%' OR uid LIKE '%{$zoekterm}%'";
-			}
-		} elseif ($zoekveld == 'adres') {
-			$zoekfilter = "adres LIKE '%{$zoekterm}%' OR woonplaats LIKE '%{$zoekterm}%' OR
-				postcode LIKE '%{$zoekterm}%' OR REPLACE(postcode, ' ', '') LIKE '%" . str_replace(' ', '', $zoekterm) . "%'";
-		} else {
-			if (preg_match('/^\d{2}$/', $zoekterm) AND ($zoekveld == 'uid' OR $zoekveld == 'naam')) {
-				//zoeken op lichtingen...
-				$zoekfilter = "SUBSTRING(uid, 1, 2)='" . $zoekterm . "'";
-			} else {
-				$zoekfilter = "{$zoekveld} LIKE '%{$zoekterm}%'";
-			}
-		}
 
 		$sort = $db->escape($sort);
 
@@ -215,7 +262,9 @@ class LidZoeker {
 	private $weergave = 'lijst';
 	private $result = null;
 
-	public function __construct() {
+	public function __construct(PersistenceModel $model, $status) {
+		parent::__construct($model);
+
 
 		//wat extra velden voor moderators.
 		if (LoginModel::mag('P_LEDEN_MOD')) {
@@ -417,7 +466,6 @@ class LidZoeker {
 		$query .= $this->getFilterSQL();
 		$query .= ' ORDER BY ' . implode($this->sort) . ';';
 
-		$this->sqlquery = $query;
 		$result = $db->query2array($query);
 
 		//De uid's omzetten naar Lid-objectjes

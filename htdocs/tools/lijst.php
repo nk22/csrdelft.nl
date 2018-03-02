@@ -2,7 +2,7 @@
 
 use CsrDelft\GoogleSync;
 use CsrDelft\lid\LedenlijstContent;
-use CsrDelft\lid\LidZoeker;
+use CsrDelft\model\zoeken\LidZoeker;
 use CsrDelft\model\CmsPaginaModel;
 use CsrDelft\model\security\LoginModel;
 use CsrDelft\view\cms\CmsPaginaView;

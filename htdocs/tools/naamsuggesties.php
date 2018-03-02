@@ -1,6 +1,6 @@
 <?php
 
-use CsrDelft\lid\LidZoeker;
+use CsrDelft\model\zoeken\LidZoeker;
 use CsrDelft\model\security\LoginModel;
 
 require_once 'configuratie.include.php';
@@ -33,8 +33,7 @@ if (isset($_GET['limit'])) {
 	$limiet = (int) $_GET['limit'];
 }
 
-require_once 'lid/LidZoeker.php';
-$namen = LidZoeker::zoekLeden($query, 'naam', 'alle', 'achternaam', $zoekin, $velden, $limiet);
+$namen = LidZoeker::zoekLeden_deprecated($query, 'naam', 'alle', 'achternaam', $zoekin, $velden, $limiet);
 
 $result = array();
 foreach ($namen as $naam) {
