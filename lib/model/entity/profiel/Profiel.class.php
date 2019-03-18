@@ -333,6 +333,10 @@ class Profiel extends PersistentEntity implements Agendeerbaar {
 			 * anders gaat het mis op randen van weken en jaren.
 			 * De maand is ook nodig, anders gaat het weer mis met de weken in januari, want dan schuift
 			 * alles doordat het jaar nog op het restje van de vorige maand staat.
+			 *
+			 * (Kortom, de agenda bepaald het jaar door te kijken naar het vakje linksboven in de agenda,
+			 * maar in januari trekt ie nog wat data uit december binnen waardoor het jaartal 1 lager is
+			 * en het dus moet worden verhoogd met 1 in januari om het correct jaartal te hebben)
 			 */
 			$jaar = $GLOBALS['agenda_jaar'];
 			if ($GLOBALS['agenda_maand'] == 1 AND substr($this->gebdatum, 5, 2) == $GLOBALS['agenda_maand']) {
@@ -356,7 +360,13 @@ class Profiel extends PersistentEntity implements Agendeerbaar {
 	}
 
 	public function getBeschrijving() {
-		$jaar = isset($GLOBALS['agenda_jaar']) ? $GLOBALS['agenda_jaar'] : date('Y');
+        $jaar = date('Y');
+        if (isset($GLOBALS['agenda_jaar'], $GLOBALS['agenda_maand'])) {
+            $jaar = $GLOBALS['agenda_jaar'];
+            if ($GLOBALS['agenda_maand'] == 1 AND substr($this->gebdatum, 5, 2) == $GLOBALS['agenda_maand']) {
+                $jaar += 1;
+            }
+        }
 		return $this->getTitel() . ' wordt ' . ($jaar - date('Y', strtotime($this->gebdatum))) . ' jaar';
 	}
 
