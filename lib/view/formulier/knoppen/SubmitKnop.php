@@ -9,7 +9,7 @@ namespace CsrDelft\view\formulier\knoppen;
  */
 class SubmitKnop extends FormulierKnop {
 
-	public function __construct($url = null, $action = 'submit', $label = 'Opslaan', $title = 'Invoer opslaan', $icon = 'disk') {
+	public function __construct($url = null, $action = 'submit', $label = 'Opslaan', $title = 'Invoer opslaan', $icon = 'save') {
 		parent::__construct($url, $action, $label, $title, $icon);
 	}
 

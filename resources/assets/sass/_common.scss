@@ -11,6 +11,10 @@ html {
 	z-index: 10000!important;
 }
 
+.btn:not(.only-icon) > svg {
+	margin-right: $input-btn-padding-y;
+}
+
 /* --------------------------------
 
 Bootstrap submenu

@@ -28,10 +28,6 @@
 .forum-header, .forum-footer {
 	max-width: 800px;
 
-	.form-group {
-		margin-bottom: 0;
-	}
-
 	h1 {
 		width: 100%;
 	}
@@ -180,32 +176,6 @@ span.curpage {
 
 	.curpage {
 		background-color: initial;
-	}
-}
-
-/* Zoeken */
-#forumZoekenForm {
-	float: right;
-}
-
-#forumZoekenForm #field_zoekopdracht {
-	width: 150px;
-	background-image: url('/plaetjes/famfamfam/find.png');
-	background-repeat: no-repeat;
-	background-position: center right;
-	padding-right: 16px;
-}
-
-#forumZoekenForm .forumZoekenGeavanceerd {
-	margin-top: 30px;
-	padding: 25px;
-
-	.form-group {
-		margin-bottom: 0;
-	}
-
-	.InputField {
-		display: inline-block;
 	}
 }
 
@@ -383,7 +353,7 @@ span.curpage {
 
 				.postpijl {
 					padding: 0 10px;
-					align-self: end;
+					align-self: flex-end;
 					grid-row: 3;
 					grid-column: 3;
 
@@ -449,7 +419,7 @@ span.curpage {
 
 				.postpijl {
 					padding: 0 10px;
-					align-self: end;
+					align-self: flex-end;
 					grid-row: 1;
 					grid-column: 3;
 

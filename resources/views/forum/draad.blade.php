@@ -12,7 +12,7 @@
 
 @section('content')
 	{!! getMelding() !!}
-	<div class="forum-header btn-toolbar">
+	<div class="forum-header align-items-start btn-toolbar">
 
 		@section('kop')
 			@auth
@@ -67,8 +67,7 @@
 					</div>
 
 					<div class="btn-group mr-2">
-						<a href="#modereren" class="btn btn-light modfuncties" title="Moderatie-functies weergeven" data-toggle="collapse" onclick="
-				 ">@icon('wrench') Modereren</a>
+						<a href="#modereren" class="btn btn-light modfuncties" title="Moderatie-functies weergeven" data-toggle="collapse">@icon('wrench') Modereren</a>
 					</div>
 				@endif
 			@endauth

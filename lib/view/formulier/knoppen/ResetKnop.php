@@ -9,7 +9,7 @@ namespace CsrDelft\view\formulier\knoppen;
  */
 class ResetKnop extends FormulierKnop {
 
-	public function __construct($url = null, $action = 'reset', $label = 'Reset', $title = 'Reset naar opgeslagen gegevens', $icon = 'arrow_rotate_anticlockwise') {
+	public function __construct($url = null, $action = 'reset', $label = 'Reset', $title = 'Reset naar opgeslagen gegevens', $icon = 'undo') {
 		parent::__construct($url, $action, $label, $title, $icon);
 	}
 

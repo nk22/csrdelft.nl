@@ -19,7 +19,7 @@ class BbNeuzen extends BbTag {
 		$content = $this->getContent();
 
 		if (LidInstellingenModel::get('layout', 'neuzen') != 'nee') {
-			$neus = Icon::getTag('bullet_red', null, null, 'neus2013', 'o');
+			$neus = Icon::getTag('neus2013', null, null, null, 'o');
 			$content = str_replace('o', $neus, $content);
 		}
 

@@ -226,29 +226,6 @@ span.curpage {
 		background-color: initial;
 	}
 }
-
-/* Zoeken */
-#forumZoekenForm {
-	float: right;
-}
-
-#forumZoekenForm #field_zoekopdracht {
-	width: 150px;
-	background-image: url('/plaetjes/famfamfam/find.png');
-	background-repeat: no-repeat;
-	background-position: center right;
-	padding-right: 16px;
-}
-
-#forumZoekenForm .forumZoekenGeavanceerd {
-	right: 250px;
-	padding: 25px;
-
-	.InputField {
-		display: inline-block;
-	}
-}
-
 /* Forum deel */
 .auteur {
 	flex: 0 0 200px; /* vast */
@@ -443,7 +420,7 @@ span.curpage {
 
 		.postpijl {
 			padding: 0 10px;
-			align-self: end;
+			align-self: flex-end;
 			grid-row: 2;
 			grid-column: 3;
 

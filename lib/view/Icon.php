@@ -18,8 +18,8 @@ class Icon {
 	public static $alias = array(
 		// algemeen
 		'toevoegen' => 'add',
-		'bewerken' => 'pencil',
-		'verwijderen' => 'cross',
+		'bewerken' => 'edit',
+		'verwijderen' => 'times',
 		'alert' => 'stop',
 		'goedkeuren' => 'tick',
 		'verjaardag' => 'cake',
@@ -63,8 +63,21 @@ class Icon {
 		'alert-warning' => 'bell',
 		// Overig
 		'table' => 'table_normal',
-		'log' => 'report'
+		'log' => 'report',
+		'lock_open' => 'lock',
+		'pencil' => 'edit',
+		'tab' => 'bookmark',
+		'thumb_down' => 'thumbs-down',
+		'arrow_right' => 'truck-moving',
 	);
+
+	public static $layer = [
+		'email_delete' => [['fas fa-envelope'], ['fas fa-ban', 'shrink-6 right-5 down-4', 'color:Tomato']],
+		'email_error' => [['fas fa-envelope'], ['fas fa-exclamation-triangle', 'shrink-6 right-5 down-4', 'color:Orange']],
+		'email_add' => [['fas fa-envelope'], ['fas fa-plus-circle', 'shrink-6 right-5 down-4', 'color:Green']],
+		'layout' => [['fas fa-caret-square-left'], ['fas fa-plus-circle', 'shrink-6 right-5 down-4', 'color:Green']],
+		'neus2013' => [['fas fa-circle', 'down-1.8 shrink-6', 'width: 9px;margin-left: -2px;color:Tomato']],
+	];
 
 	public static function get($key) {
 		if (array_key_exists($key, self::$alias)) {
@@ -92,6 +105,21 @@ class Icon {
 			$title = 'title="' . str_replace('&amp;', '&', htmlspecialchars($title)) . '" ';
 		}
 
-		return sprintf('<span class="ico %s %s %s" %s>%s</span>', htmlspecialchars($icon), htmlspecialchars($hover), htmlspecialchars($class), $title, htmlspecialchars($content));
+		if (array_key_exists($key, static::$layer)) {
+			$tags = array_map(function ($el) {
+				if (count($el) == 1) {
+					return vsprintf('<i class="%s"></i>', $el);
+				} else if (count($el) == 2) {
+					return vsprintf('<i class="%s" data-fa-transform="%s"></i>', $el);
+				} else if (count($el) == 3) {
+					return vsprintf('<i class="%s" data-fa-transform="%s" style="%s"></i>', $el);
+				}
+
+				return '';
+			}, static::$layer[$key]);
+			return vsprintf('<span class="fa-layers">%s</span>', [implode('',$tags)]);
+		}
+
+		return sprintf('<span class="fa fa-%s %s %s" %s>%s</span>', htmlspecialchars($icon), htmlspecialchars($hover), htmlspecialchars($class), $title, htmlspecialchars($content));
 	}
 }
